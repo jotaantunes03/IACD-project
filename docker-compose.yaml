@@ -1,0 +1,38 @@
+services:
+  mongodb:
+    image: jotaantunes03/mongo:v1
+    container_name: goals_mongodb
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - goals-network
+
+  frontend:
+    image: jotaantunes03/goals-frontend:v1
+    depends_on:
+      - backend
+    ports:
+      - "4000:3000"
+    networks:
+      - goals-network
+    environment:
+      - REACT_APP_BACKEND_URL=http://backend:80
+
+  backend:
+    image: jotaantunes03/goals-backend:v1
+    depends_on:
+      - mongodb
+    ports:
+      - "80:80"
+    networks:
+      - goals-network
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/course-goals
+
+volumes:
+  mongo_data:
+
+networks:
+  goals-network:
+    driver: bridge
