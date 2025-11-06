@@ -1,88 +1,94 @@
-# Docker Configuration Guide
+# Tracking Goals Web Application
 
-## Prerequisites
-- **Docker Desktop** installed and running
-- **Project folder** with complete structure
+> **Course:** Advanced Infrastructures for Data Science  
+> **Program:** MIACD  
+> **Academic Year:** 2025/2026  
+> **Institution:** University of Coimbra
 
-## Dockerfiles Setup
-Place the respective `Dockerfile` in both the `backend/` and `frontend/` directories.
+## Project Overview
 
-<br>
-<br>
+A multi-container web application that allows users to manage their goals (create, view, and delete). This project demonstrates containerization, orchestration, and deployment using Docker and Kubernetes.
 
-## Quick Setup
+### Application Architecture
 
-### 1. Navigate to project directory
-```bash
-cd path/to/your/folder/multi-01-starting-setup
+```
+┌─────────────┐      ┌─────────────┐      ┌─────────────┐
+│   Frontend  │─────▶│   Backend   │─────▶│  Database   │
+│   (React)   │      │  (Node.js)  │      │  (MongoDB)  │
+└─────────────┘      └─────────────┘      └─────────────┘
 ```
 
-### 2. Build Docker images
+**Technology Stack:**
+- **Frontend:** React (port 3000)
+- **Backend:** Node.js (port 80)
+- **Database:** MongoDB (port 27017)
+
+
+
+## Project Assignments
+
+### [Assignment #1: Build Images and Launch Containers](./assignment-1/README.md)
+- Build Docker images for each component
+- Launch individual containers
+- Basic container management
+
+### [Assignment #2: Container Connectivity & Data Persistence](./assignment-2/README.md)
+- Configure Docker networking
+- Connect backend to database
+- Connect frontend to backend
+- Implement data persistence with volumes
+
+### [Assignment #3: Docker Compose Deployment](./assignment-3/README.md)
+- Publish images to DockerHub
+- Deploy multi-container app with Docker Compose
+- Simplified orchestration and management
+
+### [Assignment #4: Kubernetes Deployment](./assignment-4/README.md)
+- Deploy on Kubernetes (Minikube)
+- Imperative approach with kubectl commands
+- Declarative approach with YAML manifests
+- Configure replicas: Database (1), Backend (2), Frontend (3)
+
+## Quick Start
+
+### Prerequisites
+- Docker Desktop installed
+- Kubernetes (Minikube) installed (for Assignment #4)
+- Git installed
+
+### Clone Repository
 ```bash
-# Backend
-docker build -t goals-backend ./backend
-
-# Frontend  
-docker build -t goals-frontend ./frontend
-
-# Database
-docker pull mongo:latest
+git clone 
+cd tracking-goals-app
 ```
 
-### 3. Create Docker network
+### Run with Docker Compose (Recommended)
 ```bash
-docker network create goals-network
+docker compose up
 ```
+Access the application at: **http://localhost:4000**
 
-### 4. Run containers
-```bash
-# MongoDB
-docker run -d --name mongodb --network goals-network -p 27017:27017 mongo
+## Docker Hub Images
 
-# Backend
-docker run -d --name backend --network goals-network -p 80:80 goals-backend
+All images are publicly available on Docker Hub:
+- `jotaantunes03/mongo:latest`
+- `jotaantunes03/goals-backend:latest`
+- `jotaantunes03/goals-frontend:latest`
 
-# Frontend
-docker run -d --name frontend -p 3000:3000 goals-frontend
-```
+[View on Docker Hub](https://hub.docker.com/repositories/jotaantunes03)
 
-### 5. Verify everything is running
-```bash
-docker ps
-```
-Should show 3 containers: frontend, backend and mongodb
+## Documentation
 
-### 6. Access the application
-Open your browser at: **http://localhost:3000**
+Each assignment folder contains detailed documentation:
+- Step-by-step setup instructions
+- Configuration explanations
+- Verification procedures
+- Management commands
 
----
+## Author
 
-## Management and Monitoring
+**João Antunes & Gabriel Pinto**  
+Master's degree in Artificial Intelligence and Data Science, University of Coimbra
 
-### View container logs
-```bash
-# Backend
-docker logs backend
 
-# Frontend
-docker logs frontend
-
-# MongoDB
-docker logs mongodb
-```
-
-### Stop the application
-```bash
-docker stop frontend backend mongodb
-```
-
-### Restart the application
-```bash
-docker start mongodb backend frontend
-```
-
-### Stop and remove everything
-```bash
-docker stop frontend backend mongodb
-docker rm frontend backend mongodb
-```
+**Instructor:** Pedro Neves (pedroneves@dei.uc.pt)

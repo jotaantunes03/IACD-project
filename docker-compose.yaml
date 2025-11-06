@@ -1,7 +1,12 @@
 services:
   mongodb:
-    image: jotaantunes03/mongo:v1
+    image: jotaantunes03/mongo:6.0
     container_name: goals_mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    ports:
+      - "27017:27017"
     restart: unless-stopped
     volumes:
       - mongo_data:/data/db
@@ -9,27 +14,30 @@ services:
       - goals-network
 
   frontend:
-    image: jotaantunes03/goals-frontend:v1
+    image: jotaantunes03/goals-frontend
     depends_on:
       - backend
     ports:
       - "4000:3000"
     networks:
       - goals-network
-    environment:
-      - REACT_APP_BACKEND_URL=http://backend:80
 
   backend:
-    image: jotaantunes03/goals-backend:v1
+    image: jotaantunes03/goals-backend
     depends_on:
       - mongodb
     ports:
-      - "80:80"
+      - "5001:80"
     networks:
       - goals-network
     environment:
+      - MONGO_HOST=mongodb
+      - MONGO_USER=admin
+      - MONGO_PASSWORD=admin
+      - MONGO_DB=course-goals
       - MONGO_URI=mongodb://mongodb:27017/course-goals
-
+    volumes:
+      - ./backend/logs:/app/logs
 volumes:
   mongo_data:
 

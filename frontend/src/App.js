@@ -4,6 +4,8 @@ import GoalInput from './components/goals/GoalInput';
 import CourseGoals from './components/goals/CourseGoals';
 import ErrorAlert from './components/UI/ErrorAlert';
 
+const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+
 function App() {
   const [loadedGoals, setLoadedGoals] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -14,7 +16,7 @@ function App() {
       setIsLoading(true);
 
       try {
-        const response = await fetch('http://localhost/goals');
+        const response = await fetch(`${API_BASE}/goals`);
 
         const resData = await response.json();
 
@@ -26,7 +28,7 @@ function App() {
       } catch (err) {
         setError(
           err.message ||
-            'Fetching goals failed - the server responsed with an error.'
+            'Fetching goals failed - the server responded with an error.'
         );
       }
       setIsLoading(false);
@@ -39,7 +41,7 @@ function App() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost/goals', {
+      const response = await fetch(`${API_BASE}/goals`, {
         method: 'POST',
         body: JSON.stringify({
           text: goalText,
@@ -68,7 +70,7 @@ function App() {
     } catch (err) {
       setError(
         err.message ||
-          'Adding a goal failed - the server responsed with an error.'
+          'Adding a goal failed - the server responded with an error.'
       );
     }
     setIsLoading(false);
@@ -78,7 +80,7 @@ function App() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost/goals/' + goalId, {
+      const response = await fetch(`${API_BASE}/goals/` + goalId, {
         method: 'DELETE',
       });
 
@@ -95,7 +97,7 @@ function App() {
     } catch (err) {
       setError(
         err.message ||
-          'Deleting the goal failed - the server responsed with an error.'
+          'Deleting the goal failed - the server responded with an error.'
       );
     }
     setIsLoading(false);
